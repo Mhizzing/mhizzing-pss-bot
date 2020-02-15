@@ -15,23 +15,23 @@ import utility
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-GUILD = os.getenv('DISCORD_GUILD')
-COMMAND_PREFIX = '-'
-ADMIN_ROLE = 'Administrator'
+COMMAND_PREFIX = '@'
+ADMIN_ROLE = 600885382829309952
+FLEET_ROLE = 577205078163718164
 
 cmd_rate = 20
 cmd_per = 10
 
-bot= commands.Bot(command_prefix=COMMAND_PREFIX, description='Discord bot intended for use with the PSS Express fleet Discord')
+bot= commands.Bot(command_prefix=COMMAND_PREFIX, description='Discord bot intended for use with the Digital Express fleet Discord')
 
 # =========== END SETUP =======================================================
 
 @bot.event
 async def on_ready():
-    guild = discord.utils.get(bot.guilds, name=GUILD)
-    print(
-        f'{bot.user.name} is connected to the following guild: \n'
-        f'{guild.name}(id: {guild.id})')
+    guild_list = bot.guilds
+    print('This bot is connected to the following server(s):')
+    for guild in guild_list:
+        print(guild.name)
 
 @bot.command(name='test', help='Used for bot testing purposes.')
 async def tester_command(ctx):
@@ -52,7 +52,7 @@ class PSS(commands.Cog, name = 'PSS Commands'):
         await ctx.send(utility.dps(wpn_string = wpn_string, wpn_stat=stat , power=power))
 
     @commands.command(name='stardust', help='Gets cheapest items of a certain rarity')
-    @commands.has_any_role(401936595294617600, 401936664487919616)
+    @commands.has_any_role(FLEET_ROLE)
     @commands.cooldown(rate=1, per=10)
     async def item_rarity_finder(self, ctx, rarity: str):
         rarity = rarity.capitalize()
@@ -65,7 +65,7 @@ class PSS(commands.Cog, name = 'PSS Commands'):
         await ctx.send(f'Engine Lv{e_lvl} with {e_stat} ENG stat: {utility.dodge_rate(e_lvl, e_stat)}% dodge rate')
 
     @commands.command(name='minswaps', help='Pulls all crates worth 497k off market', aliases=['ms'])
-    @commands.has_any_role(401936595294617600, 401936664487919616)
+    @commands.has_any_role(FLEET_ROLE)
     async def swap_finder(self, ctx):
         data = market.pull_min_swaps()
         await ctx.send(f'```{data}```')

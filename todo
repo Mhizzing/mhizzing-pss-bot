@@ -7,3 +7,8 @@ Best crew in x stat, best crew in x and y stats
 Crew prestige planner (TOOLKIT has this alrdy)
 Given list of materials, what items can I make
 Bank cog
+Personal market queries
+    - Command to search a string or substring and return all item IDs of items matching the string
+    - Command to look at personal market subset
+    - Command to add/delete from personal market subset
+    - Command to get active market data from all items in personal subset
