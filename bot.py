@@ -64,10 +64,16 @@ class PSS(commands.Cog, name = 'PSS Commands'):
     async def eng_dodge(self, ctx, e_lvl : int = 10, e_stat : float = 0.0):
         await ctx.send(f'Engine Lv{e_lvl} with {e_stat} ENG stat: {utility.dodge_rate(e_lvl, e_stat)}% dodge rate')
 
-    @commands.command(name='minswaps', help='Pulls all crates worth 497k off market', aliases=['ms'])
+    @commands.command(name='minswaps', help='Pulls all crates worth 497k mins off market', aliases=['ms'])
     @commands.has_any_role(FLEET_ROLE)
-    async def swap_finder(self, ctx):
-        data = market.pull_min_swaps()
+    async def fleet_min_swaps(self, ctx):
+        data = market.async_swaps('mineral')
+        await ctx.send(f'```{data}```')
+
+    @commands.command(name='gasswaps', help='Pulls all crates worth 497k gas off market', aliases=['gs'])
+    @commands.has_any_role(FLEET_ROLE)
+    async def fleet_gas_swaps(self, ctx):
+        data = market.async_swaps('gas')
         await ctx.send(f'```{data}```')
 
     @commands.command(name='tax', help='Determines the amount of tax when you sell an item for a certain price. ')

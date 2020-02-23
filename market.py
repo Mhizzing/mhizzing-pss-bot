@@ -57,21 +57,26 @@ def request_market_data2(itemSubType, rarity):
     data = urllib.request.urlopen(url).read()
     return data
 
-def pull_min_swaps():
+def async_swaps(resource):
+    resource = resource.lower()
     # Gather 497k swaps for both small mineral and gas crates
-    df1 = xmltext_to_df(request_market_data5('Mineral', '81', 'Common', 'MineralPack'))
+    df1 = xmltext_to_df(request_market_data5(resource.capitalize(), '81', 'Common', 'MineralPack'))
     df1['Item'] = 'Small Mineral Crate'
-    df2 = xmltext_to_df(request_market_data5('Mineral', '84', 'Common', 'GasPack'))
+    df2 = xmltext_to_df(request_market_data5(resource.capitalize(), '84', 'Common', 'GasPack'))
     df2['Item'] = 'Small Gas Crate'
     df = pd.concat([df1, df2])
 
     # Clean up output
-    df = df.loc[lambda df : df.ActivityArgument == 'mineral:497000']
+    df = df.loc[lambda df : df.ActivityArgument == f'{resource}:497000']
     df = df[['UserName', 'Item', 'ActivityArgument']]
     df.rename(columns={'ActivityArgument': 'Cost'}, inplace=True)
     df = df.reset_index(drop=True)
 
-    return df
+    if df.empty:
+        return f'There are no {resource} swaps available at the moment.'
+    else:
+        return df
+
 
 def pull_rarity(rarity):
     # Acquire data and arrange in dataframe
